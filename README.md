@@ -8,7 +8,7 @@ go get github.com/zhorifiandi/go-function-call-counter
 ```
 
 ## Usage
-Sample: https://go.dev/play/p/DPSIjK-RJWm
+Sample: https://go.dev/play/p/1z6FnHo6YYX
 ```go
 package main
 
