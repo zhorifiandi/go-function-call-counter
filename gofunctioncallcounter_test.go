@@ -1,6 +1,7 @@
 package gofunctioncallcounter_test
 
 import (
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -12,11 +13,9 @@ func myFunction(a int, b int) int {
 }
 func TestFunctionCallCounter(t *testing.T) {
 	// Create a new CountCalls object for the function
-	cc := gofunctioncallcounter.NewFunctionCallCounter(myFunction)
-
+	cc, err := gofunctioncallcounter.NewFunctionCallCounter(myFunction)
+	require.NoError(t, err)
 	require.Equal(t, 0, cc.GetCounter())
-
-	// Wrap the function with the counting wrapper and get the wrapped function value
 
 	// Call Function using original function
 	resultFromPlainFunction := myFunction(1, 2)
@@ -35,4 +34,29 @@ func TestFunctionCallCounter(t *testing.T) {
 
 	cc.ResetCounter()
 	require.Equal(t, 0, cc.GetCounter())
+}
+
+func myRaceFunction(wg *sync.WaitGroup, a int, b int) int {
+	defer wg.Done()
+	return myFunction(a, b)
+}
+
+func TestRaceFunctionCallCounter(t *testing.T) {
+	// Create a new CountCalls object for the function
+	cc, err := gofunctioncallcounter.NewFunctionCallCounter(myRaceFunction)
+	require.NoError(t, err)
+
+	// Get wrapped function
+	wrappedFn := cc.GetFunction().(func(*sync.WaitGroup, int, int) int)
+
+	var wg sync.WaitGroup
+
+	shouldBeCalled := 50
+	for i := 0; i < shouldBeCalled; i++ {
+		wg.Add(1)
+		go wrappedFn(&wg, i, shouldBeCalled)
+	}
+
+	wg.Wait()
+	require.Equal(t, shouldBeCalled, cc.GetCounter())
 }
