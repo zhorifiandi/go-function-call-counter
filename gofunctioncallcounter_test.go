@@ -11,12 +11,10 @@ func myFunction(a int, b int) int {
 	return a + b
 }
 func TestFunctionCallCounter(t *testing.T) {
-	// Create a new CountCalls object for the function
+	// Create a new FunctionCallCounter object for the function
 	cc := gofunctioncallcounter.NewFunctionCallCounter(myFunction)
 
 	require.Equal(t, 0, cc.GetCounter())
-
-	// Wrap the function with the counting wrapper and get the wrapped function value
 
 	// Call Function using original function
 	resultFromPlainFunction := myFunction(1, 2)
