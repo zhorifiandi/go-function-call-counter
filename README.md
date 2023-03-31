@@ -12,6 +12,8 @@ go get github.com/zhorifiandi/go-function-call-counter
 package main
 
 import (
+	"fmt"
+
 	gofunctioncallcounter "github.com/zhorifiandi/go-function-call-counter"
 )
 
@@ -34,6 +36,18 @@ func main() {
 
 	fmt.Printf("resultFromPlainFunction: %d\n", resultFromPlainFunction)
 	fmt.Printf("resultFromWrappedFunction: %d\n", resultFromWrappedFunction)
+
+	fmt.Printf("Function called %d times\n", cc.GetCounter())
+
+	// Call the function for several times
+	wrappedFn(4, 7)
+	wrappedFn(5, 8)
+	wrappedFn(6, 9)
+	fmt.Printf("Function called %d times\n", cc.GetCounter())
+
+	// Resetting Counter
+	cc.ResetCounter()
+	fmt.Printf("Function called %d times\n", cc.GetCounter())
 }
 
 ```
