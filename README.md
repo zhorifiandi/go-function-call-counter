@@ -24,7 +24,7 @@ func myFunction(a int, b int) int {
 
 func main() {
 	// Create a new CountCalls object for the function
-	cc := gofunctioncallcounter.NewFunctionCallCounter(myFunction)
+	cc, _ := gofunctioncallcounter.NewFunctionCallCounter(myFunction)
 
 	// Call Function using original function
 	resultFromPlainFunction := myFunction(1, 2)
